@@ -198,7 +198,7 @@ include $RULE_PATH\/rules.rules/' "$snort_conf"
     echo "$rule2" >> rules.rules
 
 #Snort at boot <looks ok on test1>
-    firstflag="snort_enable="YES""
-    secondFlag="snort_flags="-A full -l /var/log/snort -i hn0 -c /usr/local/etc/snort/snort.conf""
-    rcconf="/etc/rc.conf"
-    echo -e "$firstFlag\n$secondFlag" >> "$rc_conf"
+    firstflag="snort_enable=\"YES\""
+    secondFlag="snort_flags=\"-A full -l /var/log/snort -i hn0 -c /usr/local/etc/snort/snort.conf\""
+    rc_conf="/etc/rc.conf"
+    echo -e "$firstflag\n$secondFlag" >> "$rc_conf"
