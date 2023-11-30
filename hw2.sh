@@ -107,8 +107,7 @@ pkg install -y git
 ### Firewall stuff
 ## You will need to manually changes the outgoing port to match the target box being forwarded to before running
     ## redirect
-    header="#redirect rules"rdr
-    
+    header="#redirect rules"
     rdr22="rdr log on \$ext_if proto tcp to (\$ext_if) port 22 -> 192.168.33.84 port 22"
     rdr445="rdr log on \$ext_if proto tcp to (\$ext_if) port 445 -> 192.168.33.84 port 445"
     rdr137="rdr log on \$ext_if proto { tcp, udp } to (\$ext_if) port 137 -> 192.168.33.84 port 137"
