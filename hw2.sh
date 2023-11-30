@@ -106,8 +106,9 @@ pkg install -y git
 
 ### Firewall stuff
 ## You will need to manually changes the outgoing port to match the target box being forwarded to before running
-    ### redirect
-    header="#redirect rules"
+    ## redirect
+    header="#redirect rules"rdr
+    
     rdr22="rdr log on \$ext_if proto tcp to (\$ext_if) port 22 -> 192.168.33.84 port 22"
     rdr445="rdr log on \$ext_if proto tcp to (\$ext_if) port 445 -> 192.168.33.84 port 445"
     rdr137="rdr log on \$ext_if proto { tcp, udp } to (\$ext_if) port 137 -> 192.168.33.84 port 137"
@@ -153,7 +154,7 @@ pkg install -y git
     #reload the firewall after changes
     pfctl -vf /etc/pf.conf
 
-# Modify the local ssh server to move it to a different port for management purposes.
+# Modify the local ssh server to move it to a different port for management purposes. <works>
     sshd_config="/etc/ssh/sshd_config"
     sed -i.bak -e 's/^#Port 22/Port 2222/' "$sshd_config"
 
@@ -167,7 +168,7 @@ pkg install -y git
     #set ipvar HOME_NET to hn0 in snort.conf
     sed -i.bak "/^ipvar HOME_NET/s/.*/ipvar HOME_NET $ip_address/" "$snort_conf"
 
-    #comment out reputation preprocessor section
+    #comment out reputation preprocessor section <broke>
     sed -i.bak -e "/preprocessor reputation/,/^$/ s/^/#/" "$snort_conf"
 
     #add $RULE_PATH/rules.rules after # site specific rules 
@@ -190,15 +191,21 @@ include $RULE_PATH\/rules.rules/' "$snort_conf"
     rules_location="/usr/local/etc/snort/rules"
     cd "$rules_location" || exit 1
 
+    #<works but might rework bc doubling text>
     rule1='alert tcp any any -> any 445 (msg:\"SMBv3 Used with compression - Client to server\"; content:\"|fc 53 4d 42|\"; offset: 0; depth: 10; sid:1000001; rev:1;)'
     echo "$rule1" >> rules.rules
 
     rule2='alert tcp any 445 -> any any (msg:"SMBv3 Used with compression - Server to client"; content:"|fc 53 4d 42|"; offset: 0; depth: 10; sid:1000002; rev:1;)'
     echo "$rule2" >> rules.rules
 
-#Snort at boot
+#Snort at boot <looks ok on test1>
     firstflag="snort_enable=\"YES\""
-    echo "$firstflag" >> /etc/rc.conf
+    # echo "$firstflag" >> /etc/rc.conf
+    sed -i '$ a\${firstflag}'
 
     secondFlag="snort_flags=\"-A full -l /var/log/snort -i hn0 -c /usr/local/etc/snort/snort.conf\""
-    echo "$secondFlag" >> /etc/rc.conf
+    # echo "$secondFlag" >> /etc/rc.conf
+    sed -i '$ a\${secondFlag}'
+
+
+    
