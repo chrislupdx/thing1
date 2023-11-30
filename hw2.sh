@@ -117,7 +117,7 @@ pkg install -y git
     pf_conf="/etc/pf.conf"
     target_phrase="#blocking rules"
     sed -i.bak -e "/$target_phrase/ {
-        i\\k:
+        i\\
         $header\\
         $rdr22\\
         $rdr137\\
