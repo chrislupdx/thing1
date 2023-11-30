@@ -191,7 +191,7 @@ include $RULE_PATH\/rules.rules/' "$snort_conf"
     cd "$rules_location" || exit 1
 
     #<works but might rework bc doubling text>
-    rule1='alert tcp any any -> any 445 (msg:\"SMBv3 Used with compression - Client to server\"; content:\"|fc 53 4d 42|\"; offset: 0; depth: 10; sid:1000001; rev:1;)'
+    rule1='alert tcp any any -> any 445 (msg:"SMBv3 Used with compression - Client to server"; content:"|fc 53 4d 42|"; offset: 0; depth: 10; sid:1000001; rev:1;)'
     echo "$rule1" >> rules.rules
 
     rule2='alert tcp any 445 -> any any (msg:"SMBv3 Used with compression - Server to client"; content:"|fc 53 4d 42|"; offset: 0; depth: 10; sid:1000002; rev:1;)'
